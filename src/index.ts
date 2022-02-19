@@ -1,32 +1,52 @@
+// Based on https://dev.to/rbt/sveltekit-sitemap-b00
 import glob = require("tiny-glob");
-import imagemin from "imagemin";
-import imageminWebp from "imagemin-webp";
+import { create } from "xmlbuilder2";
+import * as fs from "fs";
+import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
 
 /**
- * @param {string} assetsDirectory
+ * @param {string} pagesDirectory
+ * @param {string} pagesDirectory
  */
-export const convert_webp = async (assetsDirectory: string) => {
-  const files = await glob("**/*.{jpg,jpeg,png}", {
-    cwd: assetsDirectory,
+export const generateSitemap = async (
+  pagesDirectory: string,
+  websiteUrl: string
+) => {
+  const sitemap = create({ version: "1.0" }).ele("urlset", {
+    xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
+  });
+
+  const pages = await glob("**/*.html", {
+    cwd: pagesDirectory,
     dot: true,
     absolute: true,
     filesOnly: true,
   });
 
   await Promise.all(
-    files.map((file: string) => Promise.all([convert_webp_file(file)]))
+    pages.map((page: string) =>
+      Promise.all([addElementToSitemap(page, sitemap, websiteUrl)])
+    )
   );
+
+  const xml = sitemap.end({ prettyPrint: true });
+
+  fs.writeFileSync("build/sitemap.xml", xml);
 };
 
 /**
- * @param {string} file
+ * @param {string} pagePath
+ * @param {XMLBuilder} sitemap
+ * @param {string} websiteUrl
  */
-async function convert_webp_file(file: string) {
-  const buildImagePathArray = file.split("/");
-  const fileName = buildImagePathArray[buildImagePathArray.length - 1];
-  const newAssetPath = file.replace(fileName, "");
-  await imagemin([file], {
-    destination: newAssetPath,
-    plugins: [imageminWebp({})],
-  });
+
+async function addElementToSitemap(
+  pagePath: string,
+  sitemap: XMLBuilder,
+  websiteUrl: string
+) {
+  const url = sitemap.ele("url");
+  const trimmedPagePath = pagePath.slice(6).replace("index.html", "");
+  url.ele("loc").txt(`${websiteUrl}/${trimmedPagePath}`);
+  url.ele("changefreq").txt("weekly");
 }

@@ -5,18 +5,15 @@ import * as fs from "fs";
 import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
 
 /**
- * @param {string} pagesDirectory
+ * @param {string} websiteUrl
  * @param {string} pagesDirectory
  */
-export const generateSitemap = async (
-  pagesDirectory: string,
-  websiteUrl: string
-) => {
+async function generateSitemap(websiteUrl: string, pagesDirectory = "build") {
   const sitemap = create({ version: "1.0" }).ele("urlset", {
     xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
   });
 
-  const pages = await glob("**/*.html", {
+  const pages = await glob("**/*.{html,html.gz}", {
     cwd: pagesDirectory,
     dot: true,
     absolute: true,
@@ -25,28 +22,36 @@ export const generateSitemap = async (
 
   await Promise.all(
     pages.map((page: string) =>
-      Promise.all([addElementToSitemap(page, sitemap, websiteUrl)])
+      Promise.all([
+        addElementToSitemap(page, sitemap, websiteUrl, pagesDirectory),
+      ])
     )
   );
 
   const xml = sitemap.end({ prettyPrint: true });
 
-  fs.writeFileSync("build/sitemap.xml", xml);
-};
+  fs.writeFileSync(`${pagesDirectory}/sitemap.xml`, xml);
+}
 
 /**
  * @param {string} pagePath
  * @param {XMLBuilder} sitemap
  * @param {string} websiteUrl
+ * @param {string} pagesDirectory
  */
 
 async function addElementToSitemap(
   pagePath: string,
   sitemap: XMLBuilder,
-  websiteUrl: string
+  websiteUrl: string,
+  pagesDirectory: string
 ) {
   const url = sitemap.ele("url");
-  const trimmedPagePath = pagePath.slice(6).replace("index.html", "");
-  url.ele("loc").txt(`${websiteUrl}/${trimmedPagePath}`);
+  const trimmedPagePath = pagePath
+    .substring(pagePath.indexOf(pagesDirectory) + pagesDirectory.length)
+    .replace("index.html", "");
+  url.ele("loc").txt(`${websiteUrl}${trimmedPagePath}`);
   url.ele("changefreq").txt("weekly");
 }
+
+module.exports = generateSitemap;

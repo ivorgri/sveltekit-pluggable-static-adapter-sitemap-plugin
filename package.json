@@ -2,7 +2,8 @@
   "name": "sveltekit-pluggable-static-adapter-sitemap-plugin",
   "version": "1.0.0",
   "description": "Plugin for creating sitemap.xml after Sveltekit build. To be used with @ivorgri/sveltekit-pluggable-static-adapter",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
@@ -13,8 +14,8 @@
     "type": "git",
     "url": "git+https://github.com/ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["sveltekit","static adapter","sitemap"],
+  "author": "Ivor Grisel (@ivorgri)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin/issues"

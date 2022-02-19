@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin/issues"
   },
-  "homepage": "https://github.com/ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin#readme"
+  "homepage": "https://github.com/ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin#readme",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
 }

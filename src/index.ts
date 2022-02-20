@@ -8,7 +8,12 @@ import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
  * @param {string} websiteUrl
  * @param {string} pagesDirectory
  */
-async function generateSitemap(websiteUrl: string, pagesDirectory = "build") {
+async function generateSitemap(
+  websiteUrl: string,
+  builder: any,
+  pagesDirectory = "build"
+) {
+  builder.log("Starting generation of sitemap");
   const sitemap = create({ version: "1.0" }).ele("urlset", {
     xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
   });
@@ -31,6 +36,8 @@ async function generateSitemap(websiteUrl: string, pagesDirectory = "build") {
   const xml = sitemap.end({ prettyPrint: true });
 
   fs.writeFileSync(`${pagesDirectory}/sitemap.xml`, xml);
+
+  builder.log("Done generating sitemap");
 }
 
 /**

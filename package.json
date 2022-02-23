@@ -1,6 +1,6 @@
 {
   "name": "@ivorgri/sveltekit-pluggable-static-adapter-sitemap-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin for creating sitemap.xml after Sveltekit build. To be used with @ivorgri/sveltekit-pluggable-static-adapter",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -38,7 +38,7 @@ async function generateSitemap(
 
   fs.writeFileSync(`${pagesDirectory}/sitemap.xml`, xml);
 
-  builder.log("Done generating sitemap");
+  builder.log("Done generating svdvdvitemap");
 }
 
 /**
@@ -57,10 +57,11 @@ async function addElementToSitemap(
   pagesDirectory: string
 ) {
   const url = sitemap.ele("url");
-  builder.log(pagePath);
+  builder.log(`Page path: ${pagePath}`);
   const trimmedPagePath = pagePath
     .substring(pagePath.lastIndexOf(pagesDirectory) + pagesDirectory.length)
     .replace("index.html", "");
+  builder.log(`Trimmed page path: ${trimmedPagePath}`);
   url.ele("loc").txt(`${websiteUrl}${trimmedPagePath}`);
   url.ele("changefreq").txt("weekly");
 }

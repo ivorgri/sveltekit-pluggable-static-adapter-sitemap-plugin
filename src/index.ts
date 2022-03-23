@@ -38,7 +38,7 @@ async function generateSitemap(
 
   fs.writeFileSync(`${pagesDirectory}/sitemap.xml`, xml);
 
-  builder.log("Done generating svdvdvitemap");
+  builder.log("Done generating sitemap");
 }
 
 /**

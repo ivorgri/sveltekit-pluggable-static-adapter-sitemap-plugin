@@ -6,6 +6,7 @@ import { XMLBuilder } from "xmlbuilder2/lib/interfaces";
 
 /**
  * @param {string} websiteUrl
+ * @param {any} builder
  * @param {string} pagesDirectory
  */
 async function generateSitemap(
@@ -28,7 +29,7 @@ async function generateSitemap(
   await Promise.all(
     pages.map((page: string) =>
       Promise.all([
-        addElementToSitemap(page, sitemap, websiteUrl, pagesDirectory),
+        addElementToSitemap(builder, page, sitemap, websiteUrl, pagesDirectory),
       ])
     )
   );
@@ -41,6 +42,7 @@ async function generateSitemap(
 }
 
 /**
+ * @param {any} builder
  * @param {string} pagePath
  * @param {XMLBuilder} sitemap
  * @param {string} websiteUrl
@@ -48,14 +50,16 @@ async function generateSitemap(
  */
 
 async function addElementToSitemap(
+  builder: any,
   pagePath: string,
   sitemap: XMLBuilder,
   websiteUrl: string,
   pagesDirectory: string
 ) {
   const url = sitemap.ele("url");
+  builder.log(pagePath);
   const trimmedPagePath = pagePath
-    .substring(pagePath.indexOf(pagesDirectory) + pagesDirectory.length)
+    .substring(pagePath.lastIndexOf(pagesDirectory) + pagesDirectory.length)
     .replace("index.html", "");
   url.ele("loc").txt(`${websiteUrl}${trimmedPagePath}`);
   url.ele("changefreq").txt("weekly");
